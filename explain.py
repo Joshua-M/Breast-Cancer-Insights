@@ -45,16 +45,19 @@ def run_explanation():
     else:
         shap_force_values = shap_values_test
 
-    # ✅ Convert Pandas Series to NumPy array for force_plot()
-    feature_values = X_test.iloc[sample_index].values.reshape(1, -1)
+
+
+    # Fix input format for force_plot
+    feature_values = X_test.iloc[sample_index].values  # 1D array
 
     fig3 = shap.force_plot(
         expected_value,
         shap_force_values[sample_index],
-        feature_values,  # ✅ Ensure correct format
+        feature_values,
         matplotlib=True
     )
     st.pyplot(fig3)
+
 
     st.markdown("---")
     st.info("Features to the right increase the chance of a **malignant** diagnosis, while those to the left push toward **benign**.")
