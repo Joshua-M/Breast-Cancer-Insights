@@ -1,32 +1,46 @@
+# explain.py
 import streamlit as st
-import pandas as pd
 import shap
 import matplotlib.pyplot as plt
-from sklearn.ensemble import RandomForestClassifier
-
-@st.cache_data
-def load_data():
-    df = pd.read_csv("2025-03-21T13-25_export.csv")
-    return df
+from model_utils import train_model, load_clean_data
 
 def run_explanation():
-    st.title("🧠 Model Explanation")
+    st.title("🧠 Model Explainability")
 
-    df = load_data()
-    X = df.drop(columns=["Unnamed: 0", "Diagnosis"])
-    y = df["Diagnosis"].map({"M": 1, "B": 0})
+    model, X_train, X_test, y_train, y_test = train_model()
 
-    model = RandomForestClassifier()
-    model.fit(X, y)
+    st.subheader("📊 Global Feature Importance (SHAP)")
+    st.markdown("Understanding how each feature impacts predictions globally.")
 
-    st.subheader("SHAP Summary Plot")
     explainer = shap.TreeExplainer(model)
-    shap_values = explainer.shap_values(X)
+    shap_values = explainer.shap_values(X_train)
 
-    fig1 = shap.summary_plot(shap_values[1], X, plot_type="bar", show=False)
+    st.set_option('deprecation.showPyplotGlobalUse', False)
+    fig1 = shap.summary_plot(shap_values[1], X_train, plot_type="bar", show=False)
     st.pyplot(bbox_inches='tight')
 
-    st.subheader("SHAP Force Plot (first observation)")
+    st.markdown("---")
+    st.subheader("🔍 SHAP Summary Plot (Distribution)")
+    shap.summary_plot(shap_values[1], X_train, show=False)
+    st.pyplot(bbox_inches='tight')
+
+    st.markdown("---")
+    st.subheader("🔬 Individual Prediction Explanation (Force Plot)")
+
+    sample_index = st.slider("Select a test sample index", 0, len(X_test)-1, 0)
+    shap_values_test = explainer.shap_values(X_test)
+
+    st.markdown("Force plot for sample below:")
     shap.initjs()
-    st_shap = shap.force_plot(explainer.expected_value[1], shap_values[1][0], X.iloc[0], matplotlib=True)
+    st_shap = shap.force_plot(
+        explainer.expected_value[1],
+        shap_values_test[1][sample_index],
+        X_test.iloc[sample_index],
+        matplotlib=True,
+        show=False
+    )
     st.pyplot(bbox_inches='tight')
+
+    st.markdown("---")
+    st.info("Features to the right increase the chance of a **malignant** diagnosis, while those to the left push toward **benign**.")
+
