@@ -1,38 +1,63 @@
-# 🧠 Breast Cancer Insights Dashboard
+# 🧠 Breast Cancer Insights
 
-An interactive Streamlit dashboard for exploring, predicting, and explaining breast cancer diagnoses using the Breast Cancer Wisconsin (Diagnostic) dataset.
+A Streamlit-powered machine learning dashboard that predicts whether a breast tumour is benign or malignant based on the **Breast Cancer Wisconsin (Original) dataset**.
+
+🔗 **Live App:**  
+👉 [https://breast-cancer-insights-nxe4yvvwv7lqzvv4q3hkte.streamlit.app/](https://breast-cancer-insights-nxe4yvvwv7lqzvv4q3hkte.streamlit.app/)
 
 ---
 
-## 📦 Features
+## 📌 Overview
 
-- **📊 Exploratory Data Analysis (EDA)**  
-  View class distributions, summary statistics, correlation heatmaps, and pairplots.
+This interactive tool allows users to:
+- Explore the dataset through visualisations
+- Manually enter tumour cell features and predict diagnosis
+- Evaluate model performance with accuracy, precision, recall and confusion matrix
 
-- **🔮 Prediction Tool**  
-  Enter values or upload a CSV to predict if a tumour is *Malignant* or *Benign* using a trained Random Forest classifier.
+---
 
-- **🧠 Model Explainability**  
-  Understand model behaviour with feature importance charts and SHAP value visualisations.
+## 📊 Sections
+- **📊 Explore the Data (EDA):**  
+  Visualise distributions, class balance, and correlations.
+
+- **🔮 Predict Tumour Type from Cell Data:**  
+  Input real or hypothetical patient measurements and get instant predictions.
+
+- **📈 Evaluate Model Performance:**  
+  View metrics like accuracy, F1 score, and see actual vs predicted classifications.
+
+---
+
+## 📦 Tech Stack
+- **Streamlit** – for building the dashboard UI
+- **scikit-learn** – for training models
+- **SHAP (optional)** – for model explainability
+- **Matplotlib & Seaborn** – for plotting
+- **Pandas & NumPy** – for data manipulation
+- **ucimlrepo** – to fetch the UCI dataset programmatically
 
 ---
 
 ## 📁 Dataset
+**Breast Cancer Wisconsin (Original)**  
+🔗 [UCI ML Repository – Dataset #15](https://archive.ics.uci.edu/dataset/15/breast+cancer+wisconsin+original)
 
-This app uses the [Breast Cancer Wisconsin (Diagnostic)](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Diagnostic%29) dataset from the UCI Machine Learning Repository, accessed via the `ucimlrepo` package.
-
-- 30 real-valued features (mean, standard error, worst of each of 10 cell nuclei measurements)
-- 569 instances
-- Binary classification:  
-  - `M` = Malignant  
-  - `B` = Benign
+- Features describe characteristics of cell nuclei present in digitised images of breast fine needle aspirates (FNAs).
+- Binary classification:
+  - `2` = Benign
+  - `4` = Malignant
 
 ---
 
-## 🚀 Getting Started
-
-### 1. Clone the repo
+## 🚀 How to Run Locally
 
 ```bash
+# Clone the repository
 git clone https://github.com/Joshua-M/breast-cancer-insights.git
 cd breast-cancer-insights
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the app
+streamlit run app.py
