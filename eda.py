@@ -59,4 +59,7 @@ def run_eda():
     st.subheader("🔎 Key Insights")
     st.markdown("""
     - **Clump Thickness**, **Cell Size Uniformity**, and **Bare Nuclei** show strong separation between benign and malignant tumours.
-    - Benign cases (`2`) are more frequent than malignant (`4
+    - Benign cases (`2`) are more frequent than malignant (`4`) in this dataset.
+    - No missing values remain after preprocessing.
+    - Correlation across features is moderate — good for interpretability in models.
+    """)
