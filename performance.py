@@ -5,7 +5,7 @@ from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, classifica
 from model_utils import (
     train_model,
     evaluate_model,
-    plot_prediction_line_chart,
+    plot_actual_vs_predicted_scatter,
 )
 
 def run_performance():
@@ -39,7 +39,7 @@ def run_performance():
     report = classification_report(y_test, results["y_pred"], target_names=["Benign", "Malignant"])
     st.code(report)
 
-    # Line Chart: Actual vs Predicted
-    st.subheader("📈 Actual vs Predicted (Line Chart)")
-    fig_line = plot_prediction_line_chart(y_test, results["y_pred"])
-    st.pyplot(fig_line)
+    # Scatter Plot: Actual vs Predicted
+    st.subheader("📈 Actual vs Predicted (Scatter Plot)")
+    fig_scatter = plot_actual_vs_predicted_scatter(y_test, results["y_pred"])
+    st.pyplot(fig_scatter)
