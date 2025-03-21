@@ -1,36 +1,44 @@
+# predict.py
 import streamlit as st
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
+from model_utils import train_model, load_clean_data
 
-@st.cache_data
-def load_data():
-    df = pd.read_csv("2025-03-21T13-25_export.csv")
-    return df
+def run_predictor():
+    st.title("🔮 Breast Cancer Prediction")
 
-def run_prediction():
-    st.title("🔮 Breast Cancer Predictor")
+    model, X_train, _, _, _ = train_model()
+    feature_columns = X_train.columns
 
-    df = load_data()
-    X = df.drop(columns=["Unnamed: 0", "Diagnosis"])
-    y = df["Diagnosis"].map({"M": 1, "B": 0})
+    st.subheader("📋 Input Features")
+    st.markdown("Adjust values below or upload a file to predict tumour class.")
 
-    model = RandomForestClassifier()
-    model.fit(X, y)
+    option = st.radio("Choose input method:", ["📝 Manual Entry", "📂 Upload CSV"])
 
-    st.write("### Input Feature Values")
+    if option == "📝 Manual Entry":
+        input_data = {}
+        cols = st.columns(3)
+        for i, feature in enumerate(feature_columns):
+            with cols[i % 3]:
+                val = st.number_input(feature.replace("_", " ").title(), min_value=0.0, value=float(X_train[feature].mean()))
+                input_data[feature] = val
+        input_df = pd.DataFrame([input_data])
 
-    user_input = {}
-    for col in X.columns:
-        user_input[col] = st.number_input(
-            col,
-            min_value=float(X[col].min()),
-            max_value=float(X[col].max()),
-            value=float(X[col].mean())
-        )
+    else:
+        uploaded_file = st.file_uploader("Upload a CSV file with correct feature names.", type=["csv"])
+        if uploaded_file:
+            input_df = pd.read_csv(uploaded_file)
+            st.success("File uploaded successfully.")
+        else:
+            st.warning("Please upload a file to proceed.")
+            return
 
-    input_df = pd.DataFrame([user_input])
+    st.subheader("🔎 Prediction Result")
 
     if st.button("Predict"):
-        prediction = model.predict(input_df)[0]
-        label = "Malignant" if prediction == 1 else "Benign"
-        st.success(f"Predicted Diagnosis: **{label}**")
+        prediction = model.predict(input_df)
+        proba = model.predict_proba(input_df)
+
+        for i in range(len(input_df)):
+            result = "Malignant" if prediction[i] == 4 else "Benign"
+            st.info(f"**Prediction {i+1}: {result}**")
+            st.progress(float(proba[i][prediction[i] == model.classes_]))
