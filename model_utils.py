@@ -1,8 +1,9 @@
-# model_utils.py
+import streamlit as st
 from ucimlrepo import fetch_ucirepo
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
+
 
 @st.cache_data
 def load_clean_data():
