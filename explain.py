@@ -2,6 +2,7 @@
 import streamlit as st
 import shap
 import matplotlib.pyplot as plt
+import numpy as np
 from model_utils import train_model, load_clean_data
 
 def run_explanation():
@@ -33,19 +34,25 @@ def run_explanation():
 
     st.markdown("Force plot for sample below:")
 
-    # ✅ Fix: Ensure correct handling of expected_value
+    # ✅ Fix: Ensure expected_value is a scalar
     expected_value = explainer.expected_value
-    if isinstance(expected_value, list):  # If multi-class
-        expected_value = expected_value[1]  # Select for class 1 (malignant)
+    if isinstance(expected_value, list):  # If multi-class, pick the relevant class
+        expected_value = expected_value[1]  # Selecting class 1 (malignant)
 
-    # ✅ Fix: Ensure correct SHAP value selection
-    shap_force_values = shap_values_test[1] if isinstance(shap_values_test, list) else shap_values_test
+    # ✅ Fix: Handle SHAP values for different model types
+    if isinstance(shap_values_test, list):
+        shap_force_values = shap_values_test[1]  # Use index 1 for class 1 (malignant)
+    else:
+        shap_force_values = shap_values_test
+
+    # ✅ Convert Pandas Series to NumPy array for force_plot()
+    feature_values = X_test.iloc[sample_index].values.reshape(1, -1)
 
     fig3 = shap.force_plot(
         expected_value,
-        shap_force_values[sample_index],  # Ensure correct SHAP value indexing
-        X_test.iloc[sample_index],
-        matplotlib=True  # ✅ Forces Matplotlib rendering instead of JavaScript
+        shap_force_values[sample_index],
+        feature_values,  # ✅ Ensure correct format
+        matplotlib=True
     )
     st.pyplot(fig3)
 
