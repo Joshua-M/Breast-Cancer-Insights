@@ -32,12 +32,13 @@ def run_explanation():
     shap_values_test = explainer.shap_values(X_test)
 
     st.markdown("Force plot for sample below:")
-    shap.initjs()
+
+    # ✅ Fix: Avoid JavaScript dependency
     fig3 = shap.force_plot(
         explainer.expected_value,
         shap_values_test[sample_index],
         X_test.iloc[sample_index],
-        matplotlib=True
+        matplotlib=True  # ✅ This forces Matplotlib rendering instead of JavaScript
     )
     st.pyplot(fig3)
 
