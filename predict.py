@@ -4,7 +4,7 @@ import pandas as pd
 from model_utils import (
     train_model,
     evaluate_model,
-    plot_prediction_line_chart,
+    plot_actual_vs_predicted_scatter,  # ✅ Correct function name
     load_clean_data
 )
 
@@ -48,5 +48,5 @@ def run_predictor():
     st.markdown("Visual comparison between actual and predicted tumour classes in the test set.")
 
     results = evaluate_model(model, X_test, y_test)
-    fig = plot_prediction_line_chart(y_test, results["y_pred"])
+    fig = plot_actual_vs_predicted_scatter(y_test, results["y_pred"])  # ✅ Fixed function call
     st.pyplot(fig)
