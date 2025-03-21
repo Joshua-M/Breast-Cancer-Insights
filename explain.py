@@ -15,14 +15,15 @@ def run_explanation():
     explainer = shap.TreeExplainer(model)
     shap_values = explainer.shap_values(X_train)
 
-    st.set_option('deprecation.showPyplotGlobalUse', False)
-    fig1 = shap.summary_plot(shap_values[1], X_train, plot_type="bar", show=False)
-    st.pyplot(bbox_inches='tight')
+    fig1, ax1 = plt.subplots()
+    shap.summary_plot(shap_values, X_train, plot_type="bar", show=False)
+    st.pyplot(fig1)
 
     st.markdown("---")
     st.subheader("🔍 SHAP Summary Plot (Distribution)")
-    shap.summary_plot(shap_values[1], X_train, show=False)
-    st.pyplot(bbox_inches='tight')
+    fig2, ax2 = plt.subplots()
+    shap.summary_plot(shap_values, X_train, show=False)
+    st.pyplot(fig2)
 
     st.markdown("---")
     st.subheader("🔬 Individual Prediction Explanation (Force Plot)")
@@ -32,15 +33,13 @@ def run_explanation():
 
     st.markdown("Force plot for sample below:")
     shap.initjs()
-    st_shap = shap.force_plot(
-        explainer.expected_value[1],
-        shap_values_test[1][sample_index],
+    fig3 = shap.force_plot(
+        explainer.expected_value,
+        shap_values_test[sample_index],
         X_test.iloc[sample_index],
-        matplotlib=True,
-        show=False
+        matplotlib=True
     )
-    st.pyplot(bbox_inches='tight')
+    st.pyplot(fig3)
 
     st.markdown("---")
     st.info("Features to the right increase the chance of a **malignant** diagnosis, while those to the left push toward **benign**.")
-
