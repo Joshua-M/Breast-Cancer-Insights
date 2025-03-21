@@ -2,12 +2,14 @@
 import streamlit as st
 from eda import run_eda
 from predict import run_predictor
+from performance import run_performance
 from explain import run_explanation
 
 st.set_page_config(page_title="Breast Cancer Wisconsin (Original)", layout="wide")
 
+
 st.sidebar.title("🔎 Navigation")
-page = st.sidebar.radio("Go to", ["🏠 Home", "📊 EDA", "🔮 Predictor", "🧠 Explainability"])
+page = st.sidebar.radio("Go to", ["🏠 Home", "📊 EDA", "🔮 Predictor", "🧠 Explainability", "📈 Performance"])
 
 if page == "🏠 Home":
     st.title("🧬 Breast Cancer Wisconsin (Original)")
@@ -31,5 +33,7 @@ elif page == "📊 EDA":
     run_eda()
 elif page == "🔮 Predictor":
     run_predictor()
+elif page == "📈 Performance":
+    run_performance()    
 elif page == "🧠 Explainability":
     run_explanation()
