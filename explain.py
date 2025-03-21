@@ -33,12 +33,19 @@ def run_explanation():
 
     st.markdown("Force plot for sample below:")
 
-    # ✅ Fix: Avoid JavaScript dependency
+    # ✅ Fix: Ensure correct handling of expected_value
+    expected_value = explainer.expected_value
+    if isinstance(expected_value, list):  # If multi-class
+        expected_value = expected_value[1]  # Select for class 1 (malignant)
+
+    # ✅ Fix: Ensure correct SHAP value selection
+    shap_force_values = shap_values_test[1] if isinstance(shap_values_test, list) else shap_values_test
+
     fig3 = shap.force_plot(
-        explainer.expected_value,
-        shap_values_test[sample_index],
+        expected_value,
+        shap_force_values[sample_index],  # Ensure correct SHAP value indexing
         X_test.iloc[sample_index],
-        matplotlib=True  # ✅ This forces Matplotlib rendering instead of JavaScript
+        matplotlib=True  # ✅ Forces Matplotlib rendering instead of JavaScript
     )
     st.pyplot(fig3)
 
