@@ -3,7 +3,7 @@ import streamlit as st
 from eda import run_eda
 from predict import run_predictor
 from performance import run_performance
-from explain import run_explanation
+
 
 st.set_page_config(page_title="Breast Cancer Wisconsin (Original)", layout="wide")
 
