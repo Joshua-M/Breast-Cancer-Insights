@@ -21,6 +21,7 @@ if page == "🏠 Home":
     **Sections:**
     - 📊 Explore the data (EDA)
     - 🔮 Predict tumour type from cell data
+    - 📈 Evaluate model performance
 
     **Target:**
     - `2`: Benign
