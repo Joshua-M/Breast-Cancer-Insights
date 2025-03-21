@@ -34,9 +34,9 @@ def run_eda():
         st.success("No missing values detected after cleaning.")
 
     st.subheader("📊 Feature Distributions by Class")
-    # Safely select two defaults from available columns
-    default_features = df.columns[1:3].tolist()
-    selected_features = st.multiselect("Select features to compare:", df.columns[1:-1], default=default_features)
+    feature_cols = [col for col in df.columns if col not in ["class"]]
+    default_features = feature_cols[:2] if len(feature_cols) >= 2 else feature_cols
+    selected_features = st.multiselect("Select features to compare:", feature_cols, default=default_features)
 
     for feature in selected_features:
         fig, ax = plt.subplots()
@@ -45,7 +45,12 @@ def run_eda():
         st.pyplot(fig)
 
     st.subheader("📈 Correlation Heatmap")
-    corr = df.drop(columns=["sample_code_number"]).corr()
+    # Drop ID column if present
+    if "sample_code_number" in df.columns:
+        corr = df.drop(columns=["sample_code_number"]).corr()
+    else:
+        corr = df.corr()
+
     fig2, ax2 = plt.subplots(figsize=(12, 8))
     sns.heatmap(corr, annot=True, cmap="coolwarm", fmt=".2f", ax=ax2)
     st.pyplot(fig2)
@@ -53,8 +58,5 @@ def run_eda():
     st.markdown("---")
     st.subheader("🔎 Key Insights")
     st.markdown("""
-    - **Clump Thickness**, **Cell Size Uniformity**, and **Bare Nuclei** tend to show strong class separation.
-    - Dataset is clean after dropping missing values (originally marked with `?`).
-    - Benign tumours (class 2) are more common than malignant (class 4) in this dataset.
-    - Correlation heatmap reveals low-to-moderate correlation among features — useful for model interpretability.
-    """)
+    - **Clump Thickness**, **Cell Size Uniformity**, and **Bare Nuclei** show strong separation between benign and malignant tumours.
+    - Benign cases (`2`) are more frequent than malignant (`4
