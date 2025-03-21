@@ -9,7 +9,7 @@ st.set_page_config(page_title="Breast Cancer Wisconsin (Original)", layout="wide
 
 
 st.sidebar.title("🔎 Navigation")
-page = st.sidebar.radio("Go to", ["🏠 Home", "📊 EDA", "🔮 Predictor", "🧠 Explainability", "📈 Performance"])
+page = st.sidebar.radio("Go to", ["🏠 Home", "📊 EDA", "🔮 Predictor", "📈 Performance"])
 
 if page == "🏠 Home":
     st.title("🧬 Breast Cancer Wisconsin (Original)")
@@ -21,7 +21,6 @@ if page == "🏠 Home":
     **Sections:**
     - 📊 Explore the data (EDA)
     - 🔮 Predict tumour type from cell data
-    - 🧠 Understand model decisions using SHAP
 
     **Target:**
     - `2`: Benign
@@ -35,5 +34,4 @@ elif page == "🔮 Predictor":
     run_predictor()
 elif page == "📈 Performance":
     run_performance()    
-elif page == "🧠 Explainability":
-    run_explanation()
+
