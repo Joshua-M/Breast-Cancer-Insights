@@ -1,28 +1,32 @@
 import streamlit as st
+import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-import pandas as pd
-from ucimlrepo import fetch_ucirepo
+
+@st.cache_data
+def load_data():
+    df = pd.read_csv("2025-03-21T13-25_export.csv")
+    return df
 
 def run_eda():
-    st.title("Exploratory Data Analysis")
+    st.title("📊 Exploratory Data Analysis")
 
-    data = fetch_ucirepo(id=17)
-    df = pd.concat([data.data.features, data.data.targets], axis=1)
+    df = load_data()
 
-    st.write("### Dataset Preview")
+    st.subheader("Dataset Preview")
     st.dataframe(df.head())
 
-    st.write("### Class Distribution")
-    st.bar_chart(df['diagnosis'].value_counts())
+    st.subheader("Class Distribution")
+    st.bar_chart(df["Diagnosis"].value_counts())
 
-    st.write("### Correlation Heatmap")
-    corr = df.drop(columns=["diagnosis"]).corr()
-    fig, ax = plt.subplots(figsize=(12,10))
-    sns.heatmap(corr, ax=ax, cmap='coolwarm')
+    st.subheader("Correlation Heatmap (First 10 features)")
+    numeric_df = df.select_dtypes(include='number').drop(columns=['Unnamed: 0'])
+    corr = numeric_df.iloc[:, :10].corr()
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.heatmap(corr, cmap="coolwarm", annot=True, ax=ax)
     st.pyplot(fig)
 
-    st.write("### Pairplot (first few features)")
-    selected = df[['radius_mean', 'texture_mean', 'area_mean', 'diagnosis']]
-    fig2 = sns.pairplot(selected, hue="diagnosis")
+    st.subheader("Boxplots (Area1 by Diagnosis)")
+    fig2, ax2 = plt.subplots()
+    sns.boxplot(data=df, x="Diagnosis", y="area1", ax=ax2)
     st.pyplot(fig2)
