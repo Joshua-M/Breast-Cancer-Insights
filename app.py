@@ -1,24 +1,35 @@
+# app.py
 import streamlit as st
 from eda import run_eda
-from predict import run_prediction
+from predict import run_predictor
 from explain import run_explanation
 
-st.set_page_config(page_title="Breast Cancer Insights Dashboard", layout="wide")
+st.set_page_config(page_title="Breast Cancer Wisconsin (Original)", layout="wide")
 
-st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to", ["🏠 Home", "📊 EDA", "🔮 Predictor", "🧠 Model Explanation"])
+st.sidebar.title("🔎 Navigation")
+page = st.sidebar.radio("Go to", ["🏠 Home", "📊 EDA", "🔮 Predictor", "🧠 Explainability"])
 
 if page == "🏠 Home":
-    st.title("Breast Cancer Insights")
-    st.write("""
-    Welcome! This dashboard helps you:
-    - Explore breast cancer data visually (EDA)
-    - Predict diagnosis (Malignant or Benign)
-    - Understand predictions using SHAP explanations
+    st.title("🧬 Breast Cancer Wisconsin (Original)")
+    st.markdown("""
+    Welcome to the **Breast Cancer Insights Dashboard**.
+
+    This app is built using the UCI Breast Cancer Wisconsin (Original) dataset.
+    
+    **Sections:**
+    - 📊 Explore the data (EDA)
+    - 🔮 Predict tumour type from cell data
+    - 🧠 Understand model decisions using SHAP
+
+    **Target:**
+    - `2`: Benign
+    - `4`: Malignant
+
+    **Source:** [UCI ML Repo](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Original%29)
     """)
 elif page == "📊 EDA":
     run_eda()
 elif page == "🔮 Predictor":
-    run_prediction()
-elif page == "🧠 Model Explanation":
+    run_predictor()
+elif page == "🧠 Explainability":
     run_explanation()
