@@ -1,31 +1,30 @@
 import streamlit as st
 import pandas as pd
-import joblib
-from ucimlrepo import fetch_ucirepo
 from sklearn.ensemble import RandomForestClassifier
 
+@st.cache_data
+def load_data():
+    df = pd.read_csv("2025-03-21T13-25_export.csv")
+    return df
+
 def run_prediction():
-    st.title("Breast Cancer Predictor")
+    st.title("🔮 Breast Cancer Predictor")
 
-    # Load or train model
-    @st.cache_resource
-    def load_model():
-        data = fetch_ucirepo(id=17)
-        X = data.data.features
-        y = data.data.targets['diagnosis'].map({'M': 1, 'B': 0})
-        model = RandomForestClassifier()
-        model.fit(X, y)
-        return model
+    df = load_data()
+    X = df.drop(columns=["Unnamed: 0", "Diagnosis"])
+    y = df["Diagnosis"].map({"M": 1, "B": 0})
 
-    model = load_model()
-    st.write("Input values for prediction:")
+    model = RandomForestClassifier()
+    model.fit(X, y)
 
-    input_data = {}
-    for col in fetch_ucirepo(id=17).data.features.columns[:5]:  # Show only 5 for demo
-        input_data[col] = st.number_input(col, value=1.0)
+    st.write("### Input Feature Values")
+    user_input = {}
+    for col in X.columns[:5]:  # Show a few for demo
+        user_input[col] = st.number_input(col, float(X[col].min()), float(X[col].max()), float(X[col].mean()))
+
+    input_df = pd.DataFrame([user_input])
 
     if st.button("Predict"):
-        input_df = pd.DataFrame([input_data])
-        pred = model.predict(input_df)[0]
-        label = "Malignant" if pred == 1 else "Benign"
-        st.success(f"The predicted diagnosis is: **{label}**")
+        prediction = model.predict(input_df)[0]
+        label = "Malignant" if prediction == 1 else "Benign"
+        st.success(f"Predicted Diagnosis: **{label}**")
