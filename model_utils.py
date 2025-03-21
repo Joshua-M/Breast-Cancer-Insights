@@ -79,21 +79,25 @@ def evaluate_model(model, X_test, y_test):
         "y_pred": y_pred
     }
 
-def plot_prediction_line_chart(y_test, y_pred):
-    df = pd.DataFrame({
-        "Index": range(len(y_test)),
-        "Actual": y_test.values,
-        "Predicted": y_pred
-    })
+def plot_actual_vs_predicted_scatter(y_test, y_pred):
+    df = pd.DataFrame({"Index": range(len(y_test)), "Actual": y_test.values, "Predicted": y_pred})
 
     fig, ax = plt.subplots(figsize=(10, 5))
-    ax.plot(df["Index"], df["Actual"], label="Actual", marker='o', linestyle='-')
-    ax.plot(df["Index"], df["Predicted"], label="Predicted", marker='x', linestyle='--')
+
+    # Plot actual values
+    ax.scatter(df["Index"], df["Actual"], label="Actual", color="blue", alpha=0.7)
+
+    # Plot predicted values
+    ax.scatter(df["Index"], df["Predicted"], label="Predicted", color="orange", marker="x", alpha=0.7)
+
+    # Highlight mismatches
+    mismatches = df[df["Actual"] != df["Predicted"]]
+    ax.scatter(mismatches["Index"], mismatches["Predicted"], color="red", marker="x", label="Mismatched", alpha=1, s=100)
+
     ax.set_yticks([2, 4])
     ax.set_yticklabels(["Benign", "Malignant"])
-    ax.set_title("Actual vs Predicted Tumour Class (Line Chart)")
+    ax.set_title("Actual vs Predicted Tumour Class (Scatter Plot)")
     ax.set_xlabel("Sample Index")
     ax.set_ylabel("Class")
     ax.legend()
     return fig
-
