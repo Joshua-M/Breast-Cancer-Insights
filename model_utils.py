@@ -79,13 +79,21 @@ def evaluate_model(model, X_test, y_test):
         "y_pred": y_pred
     }
 
-def plot_prediction_comparison(y_test, y_pred):
-    df = pd.DataFrame({"Actual": y_test, "Predicted": y_pred})
-    df["Actual"] = df["Actual"].replace({2: "Benign", 4: "Malignant"})
-    df["Predicted"] = df["Predicted"].replace({2: "Benign", 4: "Malignant"})
+def plot_prediction_line_chart(y_test, y_pred):
+    df = pd.DataFrame({
+        "Index": range(len(y_test)),
+        "Actual": y_test.values,
+        "Predicted": y_pred
+    })
 
-    fig, ax = plt.subplots(figsize=(6, 4))
-    sns.countplot(data=df, x="Actual", hue="Predicted", palette="Set2", ax=ax)
-    ax.set_title("Actual vs Predicted Tumour Class")
-    ax.legend(title="Predicted")
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.plot(df["Index"], df["Actual"], label="Actual", marker='o', linestyle='-')
+    ax.plot(df["Index"], df["Predicted"], label="Predicted", marker='x', linestyle='--')
+    ax.set_yticks([2, 4])
+    ax.set_yticklabels(["Benign", "Malignant"])
+    ax.set_title("Actual vs Predicted Tumour Class (Line Chart)")
+    ax.set_xlabel("Sample Index")
+    ax.set_ylabel("Class")
+    ax.legend()
     return fig
+
