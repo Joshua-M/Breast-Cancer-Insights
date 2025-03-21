@@ -18,9 +18,15 @@ def run_prediction():
     model.fit(X, y)
 
     st.write("### Input Feature Values")
+
     user_input = {}
-    for col in X.columns[:5]:  # Show a few for demo
-        user_input[col] = st.number_input(col, float(X[col].min()), float(X[col].max()), float(X[col].mean()))
+    for col in X.columns:
+        user_input[col] = st.number_input(
+            col,
+            min_value=float(X[col].min()),
+            max_value=float(X[col].max()),
+            value=float(X[col].mean())
+        )
 
     input_df = pd.DataFrame([user_input])
 
